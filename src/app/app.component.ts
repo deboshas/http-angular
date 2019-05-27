@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from './http.service';
 import { post } from './post';
+import { AppError } from './appError';
+import { NotFoundError } from './NotFoundError';
+import { BadInputError } from './badInputError';
 
 @Component({
   selector: 'app-root',
@@ -24,16 +27,9 @@ export class AppComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
       },
-        (error: Response) => {
-          //handle expectated error mainly 404 and 400
-          if (error.status === 404) {
-            alert('this post has already benn deleted');
-          }
-
-          else {
-            console.log(error);
-            alert("an unexcpectaed error occoured");
-          }
+        (error: any) => {
+          //handle expectated  error mainly 404 and 400
+          throw error;
         })
   }
 
@@ -43,15 +39,9 @@ export class AppComponent implements OnInit {
       .subscribe(res => {
         console.log(res.body, res.title, res.id, res.userId);
       },
-        (error: Response) => {
-          if (error.status === 400) {
-            alert('bad input');
-          }
+        (error: any) => {
 
-          else {
-            console.log(error);
-            alert("an unexcpectaed error occoured");
-          }
+          throw error;
         })
   }
 
@@ -61,9 +51,8 @@ export class AppComponent implements OnInit {
 
       this.filterdposts = this.posts = posts;
     },
-      error => {
-        console.log(error);
-        alert("an unexcpectaed error occoured");
+      (error: any) => {
+        throw error;
       })
   }
 }
